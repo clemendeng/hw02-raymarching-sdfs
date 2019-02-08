@@ -22,7 +22,7 @@ This includes a number of primitives, time-based transformation operations of ro
 ![](geometry.png)
 
 #### Bounding Volumes
-These were used for each SDF to make ray marching much more efficient. I did attempt to implement bounding volume hierarchies, but since I was transforming my geometries I concluded that doing this dynamically would be much too complicated for this assignment. I look at an article on [Wikipedia](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) as well as a [paper](http://www-ljk.imag.fr/Publications/Basilic/com.lmc.publi.PUBLI_Inproceedings@117681e94b6_1860ffd/bounding_volume_hierarchies.pdf) on this topic. Note: this project runs much faster if the lttle star balls are removed, because their bounding box is extremely large so all rays will march against that SDF. To view without them, uncomment the code on line 348 of flat-frag.glsl. Bounding volumes are shown here:
+These were used for each SDF to make ray marching much more efficient. I did attempt to implement bounding volume hierarchies, but since I was transforming my geometries I concluded that doing this dynamically would be much too complicated for this assignment. I did look at an article on [Wikipedia](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) as well as a [paper](http://www-ljk.imag.fr/Publications/Basilic/com.lmc.publi.PUBLI_Inproceedings@117681e94b6_1860ffd/bounding_volume_hierarchies.pdf) on this topic. Note: this project runs much faster if the little star balls are removed, because their bounding box is extremely large so pretty much all rays will march against that SDF. To view without them, uncomment the code on line 348 of flat-frag.glsl. Bounding volumes are shown here:
 
 ![](bound.png)
 
@@ -30,7 +30,7 @@ These were used for each SDF to make ray marching much more efficient. I did att
 The scene is very animated. The little star balls move slowly, there are rotating objects about the center point. There is not a single still object. Rotation, translation, even the light position moves, which will be talked about later on. Toolbox functions used in animation include sine curves and the gain function.
 
 #### Procedural Texturing
-The little star balls were procedurally colored using a perlin noise function as their basis. The noise was inputted into a color spectrum. Resulting texture:
+The little star balls were procedurally colored using a perlin noise function as their basis. The noise was inputted into a color spectrum. Resulting appearance:
 
 ![](balls.png)
 
