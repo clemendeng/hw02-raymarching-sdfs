@@ -115,13 +115,6 @@ float sdHexPrism(vec3 p, vec2 h) {
   return min(max(d.x,d.y),0.0) + length(max(d,0.0));
 }
 
-float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
-    vec3 pa = p - a;
-    vec3 ba = b - a;
-    float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
-    return length( pa - ba*h ) - r;
-}
-
 float opSmoothSubtraction( float d1, float d2, float k ) {
     float h = clamp( 0.5 - 0.5*(d2+d1)/k, 0.0, 1.0 );
     return mix( d2, -d1, h ) + k*h*(1.0-h);
@@ -149,9 +142,6 @@ mat4 getTransform(int id) {
   float slow = 360.f * fract(u_Time * u_Speed / 500.f);
   float med = 360.f * fract(u_Time * u_Speed / 100.f);
   float fast = 360.f * fract(u_Time * u_Speed / 30.f);
-  // slow = 0.f;
-  // med = 0.f;
-  // fast = 0.f;
   if(id == 0) {
     //slow sphere
     float dist = mod(u_Time * 360.f / 10000.f, u_Space);
@@ -171,9 +161,6 @@ mat4 getTransform(int id) {
   } else if(id == 4) {
     //locus
     return translate(vec3(0, sin(u_Time * 360.f / 10000.f) * 3.f, 0));
-  } else if(id == 5) {
-    //capsule
-    return rotate(vec3(0, fast, 0)) * rotate(vec3(slow, 0, 0));
   }
 }
 
@@ -197,8 +184,6 @@ float getSDF(int id, vec3 p) {
     return min(max(sphere, -1.f * hexPrism), insideSphere);
   } else if(id == 4) {
     return sdSphere(p, 1.0);
-  } else if(id == 5) {
-    return sdCapsule(p, vec3(0, -5, 0), vec3(0, 5, 0), 1.0);
   }
 }
 
@@ -213,8 +198,6 @@ vec3 getBoundDimensions(int id) {
     return vec3(5.5, 5.5, 5.5);
   } else if(id == 4) {
     return vec3(1.5, 1.5, 1.5);
-  } else if(id == 5) {
-    return vec3(2.5, 6, 2.5);
   }
 }
 
@@ -235,8 +218,6 @@ vec3 getColor(int id, vec3 p) {
     target = vec3(96, 3, 22);
   } else if(id == 4) {
     target = vec3(240, 255, 114);
-  } else if(id == 5) {
-    target = vec3(255, 255, 100);
   }
   return target / 255.f;
 }
@@ -364,7 +345,7 @@ void main() {
     dist = 10000.f;
     for(int id = 0; id < numPrimitives; id++) {
       //Check if hits object's bounding box
-      if(testObjs[id] > -900.f) {
+      if(testObjs[id] > -900.f /*&& id != 0*/) {
         //Test ray with untransformed object
         vec3 temp = vec3(inverse(getTransform(id)) * vec4(curr, 1));
         float currDist = getSDF(id, temp) * getScale(id);
@@ -389,8 +370,6 @@ void main() {
     vec3 lightCol = vec3(1, 1, 1);
     vec3 color = getColor(minObject, intersection);
     vec3 lightPos = vec3(translate(vec3(0, sin(u_Time * 360.f / 10000.f) * 3.f, 0)) * vec4(0, 0, 0, 1));
-    lightPos = vec3(0, 0, -2);
-    lightPos = vec3(7, 7, -7);
     vec3 toLight = normalize(lightPos - intersection);
     float intensity = dot(toLight, normal);
     //ambient + diffuse
