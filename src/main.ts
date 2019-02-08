@@ -12,6 +12,8 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 const controls = {
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
+  rotation: 3,
+  space: 3
 };
 
 let square: Square;
@@ -47,6 +49,8 @@ function main() {
 
   // Add controls to the gui
   const gui = new DAT.GUI();
+  gui.add(controls, 'rotation', 0, 10);
+  gui.add(controls, 'space', 1, 10);
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -61,7 +65,7 @@ function main() {
   // Initial call to load scene
   loadScene();
 
-  const camera = new Camera(vec3.fromValues(0, 0, -10), vec3.fromValues(0, 0, 0));
+  const camera = new Camera(vec3.fromValues(0, 0, -40), vec3.fromValues(0, 0, 0));
 
   const renderer = new OpenGLRenderer(canvas);
   renderer.setClearColor(164.0 / 255.0, 233.0 / 255.0, 1.0, 1);
@@ -85,7 +89,7 @@ function main() {
     processKeyPresses();
     renderer.render(camera, flat, [
       square,
-    ], time);
+    ], time, controls.rotation, controls.space);
     time++;
     stats.end();
 
